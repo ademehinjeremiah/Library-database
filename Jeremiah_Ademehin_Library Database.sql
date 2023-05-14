@@ -165,7 +165,7 @@ INNER JOIN Members ON Loans.MemberID = Members.MemberID
 INNER JOIN Items ON Loans.ItemID = Items.ItemID;
 
 
---QUESTION 4
+--
 CREATE TRIGGER update_item_status
 ON Loans
 AFTER UPDATE
