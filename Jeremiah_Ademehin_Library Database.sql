@@ -86,8 +86,7 @@ FROM Loans
 WHERE Loans.DateReturned IS NULL AND GETDATE() > Loans.DateDueBack;
 
 
---QUESTION 2
---2A
+
 --Stored procedure for searching the catalogue for matching character strings by title.
 CREATE PROCEDURE SearchItemsByTitle
     @SearchString nvarchar(100)
@@ -99,7 +98,6 @@ BEGIN
 END
 
 
---2B
 --A Function that returns a full list of all items currently on loan which have a due date of less than five days from the current date 
 CREATE FUNCTION GetOverdueLoans()
 RETURNS TABLE
@@ -111,7 +109,7 @@ RETURN
       AND DateReturned IS NULL;
 
 
---2C
+
 --Stored procedure for inserting a new member into the database
 CREATE PROCEDURE InsertMember
     @MemberFirstName NVARCHAR(50),
@@ -132,7 +130,6 @@ BEGIN
 END
 
 
---2D
 --Stored procedure for updating the details for an existing member
 CREATE PROCEDURE UpdateMemberDetails
     @MemberID INT,
@@ -159,7 +156,7 @@ BEGIN
 END
 
 
---QUESTION 3
+
 CREATE VIEW LoanHistory AS
 SELECT Loans.LoanID, Members.MemberFirstName, Members.MemberLastName, Items.ItemTitle, Loans.DateTakenOut AS DateBorrowed, Loans.DateDueBack, Loans.DateReturned, 
     DATEDIFF(day, Loans.DateDueBack, COALESCE(Loans.DateReturned, GETDATE())) * 0.10 AS FineAmount
@@ -185,13 +182,13 @@ BEGIN
 END;
 
 
---QUESTION 5
+
 SELECT COUNT(*) AS TotalLoans
 FROM Loans
 WHERE DateTakenOut = 'YYYY-MM-DD';
 
 
---QUESTION 6
+
 --Inserting values into the Members table
 INSERT INTO Members (MemberFirstName, MemberLastName, MemberAddress, MemberDOB, MemberUsername, MemberPassword, MemberEmail, MemberTelephone, MemberDateJoined, MemberDateLeft)
 VALUES 
@@ -247,13 +244,10 @@ SELECT * FROM Loans;
 
 
 --Testing the parameters
---2A
 EXEC SearchItemsByTitle 'the'
 
---2B
 SELECT * FROM GetOverdueLoans();
 
---2C
 DECLARE @NewMemberID int
 EXEC InsertMember 
     @MemberFirstName = 'Jeremiah',
@@ -270,7 +264,7 @@ SELECT @NewMemberID AS NewMemberID
 --To check that the values have been inserted into the table 
 SELECT * FROM Members
 
---2D
+
 EXEC UpdateMemberDetails
     @MemberID = 11,
     @MemberFirstName = 'Jeremiah',
@@ -284,11 +278,11 @@ EXEC UpdateMemberDetails
 --To check that the values have been updated in the table
 SELECT * FROM Members
 
---3
+
 SELECT * FROM LoanHistory;
 
 
---4
+
 --check the status of item 12 before updating the return date 
 SELECT * FROM Items WHERE ItemID = 12;
 --update the return date of item 12 
@@ -298,12 +292,12 @@ WHERE LoanID = 1;
 --check the status of item 12 after updating the return date 
 SELECT * FROM Items WHERE ItemID = 12;
 
---5
+
 SELECT COUNT(*) AS TotalLoans
 FROM Loans
 WHERE DateTakenOut = '2022-05-04';
 
--- QUESTION 7
+
 CREATE VIEW PopularItems AS
 SELECT TOP 3 Items.ItemTitle, COUNT(*) AS BorrowCount
 FROM Loans
